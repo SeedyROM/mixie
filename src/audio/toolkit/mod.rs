@@ -72,10 +72,10 @@ mod tests {
         let mut gain = Gain { amplitude };
         let mut data = AudioProcessorData::new(&mut input_buffer, &mut output_buffer, 44_100.0);
 
-        // Process our samples into the output buffer, input = output (identity)
+        // Process our samples into the output buffer, output = input * amplitude
         gain.process(&mut data);
 
-        // If they're the same, we've processed the data into the output buffer.
+        // If they're the same, we've correctly processed the data into the output buffer.
         assert_eq!(input_buffer.data.map(|x| x * amplitude), output_buffer.data);
     }
 }
