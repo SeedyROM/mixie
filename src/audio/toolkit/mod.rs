@@ -41,7 +41,7 @@ mod tests {
     #[test]
     fn test_audio_processor_identity() {
         let mut input_buffer = AudioBuffer::new(1);
-        let mut output_buffer: crate::audio::processor::AudioBuffer = AudioBuffer::new(1);
+        let mut output_buffer = AudioBuffer::new(1);
 
         // Write some samples into the input_buffer
         for i in 0..8 {
