@@ -18,6 +18,6 @@ pub trait FramedSamplesTrait<'a> {
 
 impl<'a> FramedSamplesTrait<'a> for (&'a mut [f32], &'a mut [f32]) {
     fn samples(&mut self) -> Zip<IterMut<'_, f32>, IterMut<'_, f32>> {
-        self.0.iter_mut().zip(self.1.iter_mut())
+        self.0.samples().zip(self.1.samples())
     }
 }

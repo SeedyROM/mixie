@@ -6,7 +6,7 @@ use crate::audio::{
 pub struct Identity;
 
 impl AudioProcessor for Identity {
-    fn process<'a>(&mut self, data: &mut AudioProcessorData<'a>) {
+    fn process(&mut self, data: &mut AudioProcessorData) {
         for (input_frame, output_frame) in data.frames() {
             for (input_sample, output_sample) in (input_frame, output_frame).samples() {
                 *output_sample = *input_sample;
@@ -20,7 +20,7 @@ pub struct Gain {
 }
 
 impl AudioProcessor for Gain {
-    fn process<'a>(&mut self, data: &mut AudioProcessorData<'a>) {
+    fn process(&mut self, data: &mut AudioProcessorData) {
         for (input_frame, output_frame) in data.frames() {
             for (input_sample, output_sample) in (input_frame, output_frame).samples() {
                 *output_sample = *input_sample * self.amplitude;
