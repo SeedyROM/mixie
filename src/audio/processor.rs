@@ -59,7 +59,7 @@ impl<'a> AudioProcessorData<'a> {
 }
 
 pub trait AudioProcessor {
-    fn process<'a>(&mut self, data: &mut AudioProcessorData<'a>);
+    fn process(&mut self, data: &mut AudioProcessorData);
 }
 
 #[cfg(test)]
