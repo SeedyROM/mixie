@@ -7,8 +7,9 @@ pub struct Identity;
 
 impl AudioProcessor for Identity {
     fn process(&mut self, data: &mut AudioProcessorData) {
-        for (input_frame, output_frame) in data.frames() {
-            for (input_sample, output_sample) in (input_frame, output_frame).samples() {
+        // Less fine grained sample processing
+        for mut frame in data.frames() {
+            for (input_sample, output_sample) in frame.samples() {
                 *output_sample = *input_sample;
             }
         }
@@ -21,6 +22,7 @@ pub struct Gain {
 
 impl AudioProcessor for Gain {
     fn process(&mut self, data: &mut AudioProcessorData) {
+        // Most fine grained processor approach
         for (input_frame, output_frame) in data.frames() {
             for (input_sample, output_sample) in (input_frame, output_frame).samples() {
                 *output_sample = *input_sample * self.amplitude;
