@@ -1,6 +1,6 @@
 use std::{iter::Zip, ops::Deref, slice::ChunksMut};
 
-const MAX_BLOCK_SIZE: usize = 1024;
+pub const MAX_BLOCK_SIZE: usize = 1024;
 
 type AudioBufferInner = [f32; MAX_BLOCK_SIZE];
 
@@ -17,8 +17,8 @@ impl AudioBuffer {
         }
     }
 
-    pub fn frames(&mut self) -> ChunksMut<f32> {
-        self.data.chunks_mut(self.channels)
+    pub fn frames(&mut self, size: usize) -> ChunksMut<f32> {
+        self.data[..size].chunks_mut(self.channels)
     }
 
     pub fn zero(&mut self) {
@@ -37,24 +37,32 @@ impl Deref for AudioBuffer {
 pub struct AudioProcessorData<'a> {
     pub sample_rate: f32,
     pub input_buffer: &'a mut AudioBuffer,
+    pub input_buffer_size: usize,
     pub output_buffer: &'a mut AudioBuffer,
+    pub output_buffer_size: usize,
 }
 
 impl<'a> AudioProcessorData<'a> {
     pub fn new(
         input_buffer: &'a mut AudioBuffer,
+        input_buffer_size: usize,
         output_buffer: &'a mut AudioBuffer,
+        output_buffer_size: usize,
         sample_rate: f32,
     ) -> Self {
         Self {
             sample_rate,
             input_buffer,
+            input_buffer_size,
             output_buffer,
+            output_buffer_size,
         }
     }
 
     pub fn frames(&mut self) -> Zip<ChunksMut<'_, f32>, ChunksMut<'_, f32>> {
-        self.input_buffer.frames().zip(self.output_buffer.frames())
+        self.input_buffer
+            .frames(self.input_buffer_size)
+            .zip(self.output_buffer.frames(self.output_buffer_size))
     }
 }
 
@@ -74,7 +82,7 @@ mod tests {
             buf.data[i] = i as f32;
         }
 
-        let mut frames = buf.frames();
+        let mut frames = buf.frames(16);
 
         let mut samples = frames.next().unwrap();
 
